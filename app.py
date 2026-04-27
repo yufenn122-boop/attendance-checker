@@ -293,20 +293,24 @@ if st.button("开始检查", type="primary"):
 
             st.divider()
 
-           if result["missing_students"]:
-               st.error("以下学员未完成打卡：")
-               for name in result["missing_students"]:
-                   nickname = STUDENT_NICKNAMES.get(name, "")
-                   if nickname:
-                       st.write(f"- {name}（{nickname}）")
-                   else:
-                       st.write(f"- {name}")
+            if result["missing_students"]:
+                st.error("以下学员未完成打卡：")
+                for name in result["missing_students"]:
+                    nickname = STUDENT_NICKNAMES.get(name, "")
+                    if nickname:
+                        st.write(f"- {name}（{nickname}）")
+                    else:
+                        st.write(f"- {name}")
             else:
-               st.success("全部学员已完成打卡 🎉")
+                st.success("全部学员已完成打卡 🎉")
 
             with st.expander("查看已打卡名单"):
                 for name in result["checked_students"]:
-                    st.write(f"- {name}")
+                    nickname = STUDENT_NICKNAMES.get(name, "")
+                    if nickname:
+                        st.write(f"- {name}（{nickname}）")
+                    else:
+                        st.write(f"- {name}")
 
             with st.expander("查看有效提交记录"):
                 if result["valid_records"]:
