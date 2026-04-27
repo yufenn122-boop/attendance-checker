@@ -8,8 +8,8 @@ from zoneinfo import ZoneInfo
 # =========================
 
 # 建议后面放到 Streamlit Secrets 里
-APP_ID = "你的APP_ID"
-APP_SECRET = "你的APP_SECRET"
+APP_ID = "cli_a965b2078cf99bde"
+APP_SECRET = "gcmlnizhUdZvI8HVPuWuqdnpmvD3Latq"
 
 APP_TOKEN = "Djscb2AQfaLXdtsszqTcT7JMnpb"
 TABLE_ID = "tbl4WiEUD7H8z5na"
