@@ -18,11 +18,18 @@ TIME_FIELD = "提交时间"
 
 # 这里写死全部学员名单
 ALL_STUDENTS = [
+    "用户309316",
     "用户833314",
-    "用户417845",
     "用户385173",
-    "用户309316"
+    "用户417845",
 ]
+
+STUDENT_NICKNAMES = {
+    "用户309316": "公主",
+    "用户833314": "escape",
+    "用户385173": "十六星",
+    "用户417845": "beyourself",
+}
 
 TIMEZONE = ZoneInfo("Asia/Shanghai")
 
@@ -257,7 +264,11 @@ st.code("昨天 00:00 ～ 今天 10:00")
 st.write("当前学员名单：")
 
 for student in ALL_STUDENTS:
-    st.write(f"- {student}")
+    nickname = STUDENT_NICKNAMES.get(student, "")
+    if nickname:
+        st.write(f"- {student}（{nickname}）")
+    else:
+        st.write(f"- {student}")
 
 st.divider()
 
@@ -282,12 +293,16 @@ if st.button("开始检查", type="primary"):
 
             st.divider()
 
-            if result["missing_students"]:
-                st.error("以下学员未完成打卡：")
-                for name in result["missing_students"]:
-                    st.write(f"- {name}")
+           if result["missing_students"]:
+               st.error("以下学员未完成打卡：")
+               for name in result["missing_students"]:
+                   nickname = STUDENT_NICKNAMES.get(name, "")
+                   if nickname:
+                       st.write(f"- {name}（{nickname}）")
+                   else:
+                       st.write(f"- {name}")
             else:
-                st.success("全部学员已完成打卡 🎉")
+               st.success("全部学员已完成打卡 🎉")
 
             with st.expander("查看已打卡名单"):
                 for name in result["checked_students"]:
