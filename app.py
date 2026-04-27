@@ -213,9 +213,13 @@ def parse_name(value):
 # =========================
 
 def display_student_name(student):
+    """
+    页面上只显示昵称。
+    如果没配置昵称，才显示原始学员名。
+    """
     nickname = STUDENT_NICKNAMES.get(student, "")
     if nickname:
-        return f"{student}（{nickname}）"
+        return nickname
     return student
 
 
@@ -375,26 +379,7 @@ def check_attendance():
 # =========================
 
 st.title("✅ 谁没有做任务")
-st.caption("自动检查飞书多维表格打卡记录")
-
-st.divider()
-
-st.write("### 检查规则")
-
-st.info("每一天的检查窗口：前一天 00:00 ～ 当天 10:00")
-
-st.write("例如今天是 4.27：")
-
-st.code(
-    "今天检查：4.26 00:00 ～ 4.27 10:00\n"
-    "昨天检查：4.25 00:00 ～ 4.26 10:00\n"
-    "前天检查：4.24 00:00 ～ 4.25 10:00"
-)
-
-st.write("### 当前学员名单")
-
-for student in ALL_STUDENTS:
-    st.write(f"- {display_student_name(student)}")
+st.caption("检查飞书打卡记录，快速查看缺卡情况")
 
 st.divider()
 
@@ -404,18 +389,6 @@ if st.button("开始检查", type="primary"):
             result = check_attendance()
 
             st.success("检查完成")
-
-            st.write("### 本次检查窗口")
-
-            for window in result["windows"]:
-                st.write(
-                    f"- {window['check_day'].strftime('%Y-%m-%d')}："
-                    f"{window['start_dt'].strftime('%Y-%m-%d %H:%M:%S')} "
-                    f"～ "
-                    f"{window['end_dt'].strftime('%Y-%m-%d %H:%M:%S')}"
-                )
-
-            st.divider()
 
             col1, col2, col3 = st.columns(3)
             col1.metric("全员人数", len(ALL_STUDENTS))
@@ -454,8 +427,7 @@ if st.button("开始检查", type="primary"):
 
                 for student in ALL_STUDENTS:
                     row = {
-                        "学员": student,
-                        "昵称": STUDENT_NICKNAMES.get(student, ""),
+                        "学员": display_student_name(student),
                     }
 
                     for window in result["windows"]:
@@ -470,7 +442,16 @@ if st.button("开始检查", type="primary"):
 
             with st.expander("查看匹配到的有效提交记录"):
                 if result["valid_records"]:
-                    st.dataframe(result["valid_records"], use_container_width=True)
+                    display_records = []
+
+                    for record in result["valid_records"]:
+                        display_records.append({
+                            "学员": display_student_name(record["学员"]),
+                            "归属检查日": record["归属检查日"],
+                            "实际提交时间": record["实际提交时间"],
+                        })
+
+                    st.dataframe(display_records, use_container_width=True)
                 else:
                     st.write("最近三个检查窗口内没有匹配到有效提交记录")
 
@@ -480,3 +461,20 @@ if st.button("开始检查", type="primary"):
         except Exception as e:
             st.error("检查失败")
             st.exception(e)
+
+
+st.divider()
+
+with st.expander("查看检查规则"):
+    st.info("每一天的检查窗口：前一天 00:00 ～ 当天 10:00")
+
+    st.code(
+        "例如今天是 4.27：\n"
+        "今天检查：4.26 00:00 ～ 4.27 10:00\n"
+        "昨天检查：4.25 00:00 ～ 4.26 10:00\n"
+        "前天检查：4.24 00:00 ～ 4.25 10:00"
+    )
+
+with st.expander("查看当前学员名单"):
+    for student in ALL_STUDENTS:
+        st.write(f"- {display_student_name(student)}")
