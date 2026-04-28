@@ -8,11 +8,11 @@ from zoneinfo import ZoneInfo
 # =========================
 
 # 建议后面放到 Streamlit Secrets 里
-APP_ID = "cli_a965b2078cf99bde"
-APP_SECRET = "gcmlnizhUdZvI8HVPuWuqdnpmvD3Latq"
+APP_ID = st.secrets["FEISHU_APP_ID"]
+APP_SECRET = st.secrets["FEISHU_APP_SECRET"]
 
-APP_TOKEN = "Djscb2AQfaLXdtsszqTcT7JMnpb"
-TABLE_ID = "tbl4WiEUD7H8z5na"
+APP_TOKEN = st.secrets["FEISHU_APP_TOKEN"]
+TABLE_ID = st.secrets["FEISHU_TABLE_ID"]
 
 NAME_FIELD = "群昵称"
 TIME_FIELD = "提交时间"
